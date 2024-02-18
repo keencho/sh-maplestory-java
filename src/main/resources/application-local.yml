@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    show-sql: false
+    properties:
+      org:
+        hibernate:
+          flushMode: COMMIT
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+    open-in-view: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/maplestory
+    username: maplestory
+    password: "maplestory"

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sh.maplestory.external.open_api.dto.res.Error;
 import com.sh.maplestory.external.open_api.dto.res.character.*;
 import com.sh.maplestory.external.open_api.dto.res.Response;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -26,7 +27,7 @@ public class Client {
     private final String key;
     private final ObjectMapper objectMapper;
 
-    public Client(String key, ObjectMapper objectMapper) {
+    public Client(@Value("${maplestory.api-key}") String key, ObjectMapper objectMapper) {
         this.url = "https://open.api.nexon.com/maplestory";
         this.key = key;
         this.objectMapper = objectMapper;

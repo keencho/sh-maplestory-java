@@ -1,0 +1,13 @@
+server:
+  port: 50000
+  servlet:
+    context-path: "/api"
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: maplestory
+
+maplestory:
+  api-key: ${MAPLESTORY_API_KEY}

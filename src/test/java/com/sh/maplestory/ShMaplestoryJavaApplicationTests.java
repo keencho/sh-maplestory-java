@@ -25,7 +25,7 @@ class ShMaplestoryJavaApplicationTests {
 
         objectMapper.registerModule(deserializerModule);
 
-        client = new Client("test_97a2b4b4accaa93ec74201b261774e604aa244f3919f85c6ad41a676e5e8243f0fd7ec966b269e6d630204b7aa020338", objectMapper);
+        client = new Client("", objectMapper);
     }
 
     @Test

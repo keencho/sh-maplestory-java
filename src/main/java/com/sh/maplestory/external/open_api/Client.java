@@ -4,14 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sh.maplestory.external.open_api.dto.res.Error;
-import com.sh.maplestory.external.open_api.dto.res.character.*;
 import com.sh.maplestory.external.open_api.dto.res.Response;
+import com.sh.maplestory.external.open_api.dto.res.character.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class Client {
 
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -89,6 +90,21 @@ public class Client {
         return this.call(HttpMethod.GET, "/v1/character/hyper-stat", this.buildCharacterParams(ocid, date), CharacterHyperStat.class);
     }
 
+    /**
+     * 성향 정보 조회
+     */
+
+    /**
+     * 어빌리티 정보 조회
+     *
+     * @param ocid
+     * @param date
+     * @return
+     */
+    public Response<CharacterAbility> getCharacterAbility(String ocid, LocalDate date) {
+        return this.call(HttpMethod.GET, "/v1/character/ability", this.buildCharacterParams(ocid, date), CharacterAbility.class);
+    }
+
     private <T> Response<T> call(HttpMethod method, String path, Map<String, String> data, Class<T> clazz) {
         var headers = new HttpHeaders();
         headers.set("accept", "application/json");
@@ -119,8 +135,13 @@ public class Client {
             }
         }
 
+//        var tree = "{\"date\":null,\"ability_grade\":\"레전드리\",\"ability_info\":[{\"ability_no\":\"1\",\"ability_grade\":\"레전드리\",\"ability_value\":\"스킬 사용 시 20% 확률로 재사용 대기시간이 미적용\"},{\"ability_no\":\"2\",\"ability_grade\":\"유니크\",\"ability_value\":\"상태 이상에 걸린 대상 공격 시 데미지 8% 증가\"},{\"ability_no\":\"3\",\"ability_grade\":\"유니크\",\"ability_value\":\"보스 몬스터 공격 시 데미지 9% 증가\"}],\"remain_fame\":141719,\"preset_no\":1,\"ability_preset_1\":{\"ability_preset_grade\":\"레전드리\",\"ability_info\":[{\"ability_no\":\"1\",\"ability_grade\":\"레전드리\",\"ability_value\":\"스킬 사용 시 20% 확률로 재사용 대기시간이 미적용\"},{\"ability_no\":\"2\",\"ability_grade\":\"유니크\",\"ability_value\":\"상태 이상에 걸린 대상 공격 시 데미지 8% 증가\"},{\"ability_no\":\"3\",\"ability_grade\":\"유니크\",\"ability_value\":\"보스 몬스터 공격 시 데미지 9% 증가\"}]},\"ability_preset_2\":{\"ability_preset_grade\":\"레전드리\",\"ability_info\":[{\"ability_no\":\"1\",\"ability_grade\":\"레전드리\",\"ability_value\":\"메소 획득량 19% 증가\"},{\"ability_no\":\"2\",\"ability_grade\":\"에픽\",\"ability_value\":\"STR 17 증가, LUK 9 증가\"},{\"ability_no\":\"3\",\"ability_grade\":\"에픽\",\"ability_value\":\"아이템 드롭률 9% 증가\"}]},\"ability_preset_3\":{\"ability_preset_grade\":\"에픽\",\"ability_info\":[{\"ability_no\":\"1\",\"ability_grade\":\"에픽\",\"ability_value\":\"모든 능력치 15 증가\"},{\"ability_no\":\"2\",\"ability_grade\":\"레어\",\"ability_value\":\"모든 능력치 5 증가\"},{\"ability_no\":\"3\",\"ability_grade\":\"레어\",\"ability_value\":\"모든 능력치 5 증가\"}]}}";
+
         try {
-            return Response.success(objectMapper.treeToValue(res.getBody(), clazz));
+//            var res = objectMapper.readTree(tree);
+//            var ret = objectMapper.treeToValue(res, clazz);
+            var ret = objectMapper.treeToValue(res.getBody(), clazz);
+            return Response.success(ret);
         } catch (JsonProcessingException e) {
             return Response.error(new Error("JSON Parsing Error", "The request was successful, but the type conversion failed."));
         }

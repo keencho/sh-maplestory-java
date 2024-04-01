@@ -7,6 +7,8 @@ import com.sh.maplestory.repository.CharacterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 public class CharacterService {
 
@@ -22,7 +24,7 @@ public class CharacterService {
         if (character == null) {
             var ocidRes = client.getOcid(characterName);
 
-            if (!ocidRes.isSuccess()) {
+            if (ocidRes.isSuccess()) {
                 return null;
             }
 
@@ -32,13 +34,17 @@ public class CharacterService {
         }
 
         var ocid = character.getOcid();
-        character.setBasic(this.getData(client.getCharacterBasic(ocid, null)));
+        if (character.getBasic() == null) {
+            character.setAbility(this.getData(client.getCharacterAbility(ocid, null)));
+            character.setBasic(this.getData(client.getCharacterBasic(ocid, null)));
+            character.setHyperStat(this.getData(client.getCharacterHyperStat(ocid, LocalDate.now().minusDays(1))));
+        }
 
         return characterRepository.save(character);
     }
 
     private <T> T getData(Response<T> data) {
-        if (!data.isSuccess()) {
+        if (data.isSuccess()) {
             return null;
         }
 

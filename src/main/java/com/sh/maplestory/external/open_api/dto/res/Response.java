@@ -20,6 +20,6 @@ public class Response<T> {
     }
 
     public boolean isSuccess() {
-        return this.error == null;
+        return this.error != null;
     }
 }

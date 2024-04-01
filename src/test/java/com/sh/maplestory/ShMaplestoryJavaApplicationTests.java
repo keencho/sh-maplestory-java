@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.sh.maplestory.external.open_api.Client;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,19 +14,25 @@ import java.time.format.DateTimeFormatter;
 
 class ShMaplestoryJavaApplicationTests {
 
-    private static ObjectMapper objectMapper;
     private static Client client;
 
     @BeforeAll
     public static void beforeAll() {
-        objectMapper = new ObjectMapper();
+
+        var key = System.getenv("MAPLESTORY_API_KEY");
+
+        if (!StringUtils.hasText(key)) {
+            throw new RuntimeException("The test cannot be started because the required key is not registered with the system environment variable.");
+        }
+
+        var objectMapper = new ObjectMapper();
 
         var deserializerModule = new SimpleModule();
         deserializerModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 
         objectMapper.registerModule(deserializerModule);
 
-        client = new Client("", objectMapper);
+        client = new Client(key, objectMapper);
     }
 
     @Test

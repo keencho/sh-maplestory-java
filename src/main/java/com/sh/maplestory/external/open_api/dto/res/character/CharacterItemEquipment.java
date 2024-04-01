@@ -1,25 +1,21 @@
 package com.sh.maplestory.external.open_api.dto.res.character;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.sh.maplestory.config.OpenAPIDeserializer;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@JsonDeserialize(using = OpenAPIDeserializer.class)
 public class CharacterItemEquipment {
     private LocalDateTime date;
-
-    @JsonProperty("character_gender")
     private String characterGender;
-
-    @JsonProperty("character_class")
     private String characterClass;
-
-    @JsonProperty("preset_no")
     private long presetNo;
 
     @Data
-    static class Equipment {
+    public static class Equipment {
 
     }
 }
